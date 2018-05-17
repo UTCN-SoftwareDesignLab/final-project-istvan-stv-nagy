@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create Flight</title>
+</head>
+<body>
+
+<form th:action="@{/flight/create}" th:object="${flight}" method="post">
+    Departure Airport:
+    <select name="depAirport" id="depAirport" th:field="${flight.departureAirportID}">
+        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+    </select>
+
+    Departure Date:
+    <input type="date" id="depDate" name="depDate" th:field="${flight.departureDate}"/>
+
+    Departure Time:
+    <input type="time" id="depTime" name="depTime" th:field="${flight.departureTime}"/>
+
+    Arrival Airport:
+    <select name="arrAirport" id="arrAirport" th:field="${flight.arrivalAirportID}">
+        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+    </select>
+
+    Departure Date:
+    <input type="date" id="arrDate" name="depDate" th:field="${flight.arrivalDate}"/>
+
+    Departure Time:
+    <input type="time" id="arrTime" name="depTime" th:field="${flight.arrivalTime}"/>
+
+
+    <button>Create</button>
+</form>
+
+</body>
+</html>

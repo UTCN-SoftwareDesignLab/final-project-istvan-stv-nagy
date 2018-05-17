@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flights</title>
+    <style>
+        td {
+            width: 200px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        table, th, td {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<h1>All Flights</h1>
+
+<p th:text="'Flights FROM: ' + ${routes[0].departureAirport.location} + ' TO: ' + ${routes[0].arrivalAirport.location}"></p>
+
+<th:block th:each="r : ${routes}">
+    <p th:text="'Number of flights: ' + ${#lists.size(r.flights)}"></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Dep. Airport</th>
+            <th>Dep. Date</th>
+            <th>Dep. Time</th>
+            <th>Arr. Airport</th>
+            <th>Arr. Date</th>
+            <th>Arr. Time</th>
+        </tr>
+
+        <th:block th:each="f : ${r.flights}">
+            <tr>
+                <td th:text="${f.departureLocation.location}"></td>
+                <td th:text="${f.departureDate}"></td>
+                <td th:text="${f.departureTime}"></td>
+                <td th:text="${f.arrivalLocation.location}"></td>
+                <td th:text="${f.arrivalDate}"></td>
+                <td th:text="${f.arrivalTime}"></td>
+            </tr>
+        </th:block>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <hr />
+</th:block>
+
+
+</html>
