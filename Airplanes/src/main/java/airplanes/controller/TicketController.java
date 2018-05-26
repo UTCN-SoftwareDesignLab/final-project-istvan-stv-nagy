@@ -4,7 +4,9 @@ import airplanes.entity.Reservation;
 import airplanes.service.reservation.ReservationService;
 import airplanes.service.ticket.TicketGeneratorPDF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,11 @@ public class TicketController {
     public ResponseEntity<byte[]> generateTicket(@PathVariable(value="reservationID") Integer reservationID) {
         Reservation reservation = reservationService.findByID(reservationID);
         byte[] ticket = ticketGeneratorPDF.generateTicket(reservation);
-        return new ResponseEntity<>(ticket, null, HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(ticket, headers, HttpStatus.OK);
     }
 }

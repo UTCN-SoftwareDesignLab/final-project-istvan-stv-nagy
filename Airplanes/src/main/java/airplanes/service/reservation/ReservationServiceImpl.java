@@ -22,9 +22,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation create(Flight flight, User user) {
+    public Reservation create(Flight flight, User user, double price) {
         Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Reservation reservation = new Reservation(user, flight, date);
+        Reservation reservation = new Reservation(user, flight, date, price);
         return reservationRepository.save(reservation);
     }
 

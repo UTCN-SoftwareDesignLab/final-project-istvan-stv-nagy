@@ -20,7 +20,7 @@ public class RouteFinderServiceImpl implements RouteFinderService {
     }
 
     @Override
-    public List<Route> findRoute(Airport departureAirport, Airport arrivalAirport) {
-        return routeFinder.findRoute(departureAirport, arrivalAirport);
+    public List<Route> findRoute(Airport departureAirport, Airport arrivalAirport, RouteCriteria criteria) {
+        return routeFinder.findRoute(departureAirport, arrivalAirport, criteria);
     }
 }

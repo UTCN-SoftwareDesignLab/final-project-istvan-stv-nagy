@@ -49,10 +49,13 @@ public class LoginController {
             session.setAttribute("active-user", user);
 
         if (user.getRole().equals("ADMIN"))
-            return "redirect:flight/search";
+            return "redirect:admin/profile";
 
-        else if (user.getRole().equals("EMPLOYEE"))
-            return "redirect:flight/search";
+        else if (user.getRole().equals("CLIENT"))
+            return "redirect:user/profile";
+
+        else if (user.getRole().equals("PILOT"))
+            return "redirect:pilot/profile";
 
         return null;
     }

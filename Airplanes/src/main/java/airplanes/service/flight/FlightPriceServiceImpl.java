@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FlightPriceServiceImpl implements FlightPriceService {
 
-    private static final double PRICE_UP = 0.05;
+    private static final double PRICE_UP = 0.0005;
 
     private FlightPriceRepository flightPriceRepository;
 

@@ -21,12 +21,15 @@ public class Reservation {
 
     private Date bookingDate;
 
+    private double price;
+
     public Reservation() {}
 
-    public Reservation(User user, Flight flight, Date date) {
+    public Reservation(User user, Flight flight, Date date, double price) {
         this.user = user;
         this.flight = flight;
         this.bookingDate = date;
+        this.price = price;
     }
 
     public int getId() {
@@ -59,5 +62,13 @@ public class Reservation {
 
     public void setBookingDate(Date bookingDate) {
         this.bookingDate = bookingDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

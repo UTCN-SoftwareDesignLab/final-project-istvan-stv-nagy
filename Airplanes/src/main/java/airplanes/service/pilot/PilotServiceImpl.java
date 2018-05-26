@@ -1,6 +1,7 @@
 package airplanes.service.pilot;
 
 import airplanes.entity.Pilot;
+import airplanes.entity.User;
 import airplanes.repository.PilotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class PilotServiceImpl implements PilotService {
     @Override
     public Pilot findById(Integer id) {
         return pilotRepository.findOne(id);
+    }
+
+    @Override
+    public Pilot findByUser(User user) {
+        return pilotRepository.findByUser(user);
     }
 }

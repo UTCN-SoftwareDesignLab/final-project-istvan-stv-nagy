@@ -2,68 +2,138 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"/>
+      <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <head>
     <meta charset="UTF-8"/>
     <title>Create Flight</title>
 </head>
 <body>
 
-<form class="form-horizontal" th:action="@{/flight/create}" th:object="${flight}" method="post">
-    <b>Departure Information:</b>
-    <hr />
-    Departure Airport:
-    <select name="depAirport" id="depAirport" th:field="${flight.departureAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
-    </select>
-    <br />
-    Departure Date:
-    <input type="date" id="depDate" name="depDate" th:field="${flight.departureDate}"/>
-    <br />
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/admin/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/flight/create">Add Flight</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/flight/findall">Browse Flights</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/user/create">Add User</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/user/findall">Browse Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
+</ul>
 
-    Departure Time:
-    <input type="time" id="depTime" name="depTime" th:field="${flight.departureTime}"/>
-    <hr />
-    <br /> <br />
+<form th:action="@{/admin/flight/create}" th:object="${flight}" method="post">
+    <hr/>
+    <div class="form-group row">
+        <label style="color:#0000ff; font-size:24px" class="col-sm-2 col-form-label">Departure Information:</label>
+    </div>
 
-    <b>Arrival Information:</b>
-    <hr />
-    Arrival Airport:
-    <select name="arrAirport" id="arrAirport" th:field="${flight.arrivalAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
-    </select>
-    <br />
+    <div class="form-group row">
+        <label for="depAirportID" class="col-sm-2 col-form-label">Departure Airport</label>
+        <div class="col-sm-2">
+            <select name="depAirport" class="form-control" id="depAirportID" th:field="${flight.departureAirportID}">
+                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select departure airport</option>
+                <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
+            </select>
+        </div>
+    </div>
 
-    Departure Date:
-    <input type="date" id="arrDate" name="depDate" th:field="${flight.arrivalDate}"/>
-    <br />
+    <div class="form-group row">
+        <label for="depDateID" class="col-sm-2 col-form-label">Departure Date</label>
+        <div class="col-sm-2">
+            <input type="date" id="depDateID" class="form-control" name="depDate" th:field="${flight.departureDate}"/>
+        </div>
+    </div>
 
-    Departure Time:
-    <input type="time" id="arrTime" name="depTime" th:field="${flight.arrivalTime}"/>
-    <hr />
-    <br /> <br />
+    <div class="form-group row">
+        <label for="depTimeID" class="col-sm-2 col-form-label">Departure Time</label>
+        <div class="col-sm-2">
+            <input type="time" id="depTimeID" class="form-control" name="depTime" th:field="${flight.departureTime}"/>
+        </div>
+    </div>
 
-    <b>Pilot and Airplane:</b>
-    <hr />
-    Airplane:
-    <select name="airplane" id="airplane" th:field="${flight.airplaneID}">
-        <option th:each="airplane : ${airplanes}" th:value="${airplane.id}" th:text="${airplane.number} + '(' +${airplane.type} +')'"></option>
-    </select>
-    <br />
-    Pilot:
-    <select name="pilot" id="pilot" th:field="${flight.pilotID}">
-        <option th:each="pilot : ${pilots}" th:value="${pilot.id}" th:text="${pilot.name}"></option>
-    </select>
-    <hr />
-    <br/><br/>
+    <hr/>
 
-    <b>Price Information:</b>
-    <hr />
-    Price:
-    <input type="number" step="0.01" id="price" name="price" th:field="${flight.price}"/>
-    <hr />
-    <br/><br/>
+    <div class="form-group row">
+        <label style="color:#0000ff; font-size:24px" class="col-sm-2 col-form-label">Departure Information:</label>
+    </div>
+    <div class="form-group row">
+        <label for="arrAirportID" class="col-sm-2 col-form-label">Arrival Airport</label>
+        <div class="col-sm-2">
+            <select name="arrAirport" id="arrAirportID" class="form-control" th:field="${flight.arrivalAirportID}">
+                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select arrival airport</option>
+                <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
+            </select>
+        </div>
+    </div>
 
-    <button>Create</button>
+    <div class="form-group row">
+        <label for="arrDateID" class="col-sm-2 col-form-label">Arrival Date</label>
+        <div class="col-sm-2">
+            <input type="date" id="arrDateID" class="form-control" name="depDate" th:field="${flight.arrivalDate}"/>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="arrTimeID" class="col-sm-2 col-form-label">Arrival Time</label>
+        <div class="col-sm-2">
+            <input type="time" id="arrTimeID" class="form-control" name="depTime" th:field="${flight.arrivalTime}"/>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="form-group row">
+        <label style="color:#0000ff; font-size:24px" class="col-sm-2 col-form-label">Pilot and Airplane:</label>
+    </div>
+    <div class="form-group row">
+        <label for="pilotID" class="col-sm-2 col-form-label">Pilot</label>
+        <div class="col-sm-2">
+            <select name="pilot" id="pilotID" class="form-control" th:field="${flight.pilotID}">
+                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select pilot</option>
+                <option th:each="pilot : ${pilots}" th:value="${pilot.id}" th:text="${pilot.name}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="airplaneID" class="col-sm-2 col-form-label">Airplane</label>
+        <div class="col-sm-2">
+            <select name="airplane" id="airplaneID" class="form-control" th:field="${flight.airplaneID}">
+                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select airplane</option>
+                <option th:each="airplane : ${airplanes}" th:value="${airplane.id}" th:text="${airplane.number} + '(' +${airplane.type} +')'"></option>
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="form-group row">
+        <label style="color:#0000ff; font-size:24px" class="col-sm-2 col-form-label">Price:</label>
+    </div>
+
+    <div class="form-group row">
+        <label for="priceID" class="col-sm-2 col-form-label">Price</label>
+        <div class="col-sm-2">
+            <input type="number" step="0.01" placeholder="Select price" class="form-control" id="priceID" name="price" th:field="${flight.price}"/>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </div>
 </form>
 
 </body>

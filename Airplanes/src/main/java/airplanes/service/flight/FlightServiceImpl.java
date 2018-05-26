@@ -80,4 +80,9 @@ public class FlightServiceImpl implements FlightService {
     public Flight findById(Integer id) {
         return flightRepository.findOne(id);
     }
+
+    @Override
+    public List<Flight> findAllByPilot(Pilot pilot) {
+        return flightRepository.findAllByPilot(pilot);
+    }
 }

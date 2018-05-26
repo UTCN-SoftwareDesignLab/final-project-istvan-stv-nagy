@@ -31,21 +31,37 @@
     </li>
 </ul>
 
+<h1>Bookmarks</h1>
+
 <br/><br/>
 
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>Departure Airport</th>
-        <th>Arrival Airport</th>
+        <th>Dep. Airport</th>
+        <th>Dep. Date</th>
+        <th>Dep. Time</th>
+        <th>Arr. Airport</th>
+        <th>Arr. Date</th>
+        <th>Arr. Time</th>
         <th>Price</th>
+        <th>Book Flight</th>
     </tr>
 
     <th:block th:each="b : ${bookmarks}">
         <tr>
             <td th:text="${b.flight.flight.departureLocation.location}"></td>
+            <td th:text="${b.flight.flight.departureDate}"></td>
+            <td th:text="${b.flight.flight.departureTime}"></td>
             <td th:text="${b.flight.flight.arrivalLocation.location}"></td>
+            <td th:text="${b.flight.flight.arrivalDate}"></td>
+            <td th:text="${b.flight.flight.arrivalTime}"></td>
             <td th:text="${#numbers.formatDecimal(b.flight.price, 0, 2)}"></td>
+            <td>
+                <form th:action="@{'/flight/book/' + ${b.flight.flight.id}}" method="post">
+                    <button class="btn btn-primary">Book flight</button>
+                </form>
+            </td>
         </tr>
     </th:block>
 

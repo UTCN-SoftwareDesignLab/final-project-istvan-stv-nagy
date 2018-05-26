@@ -3,67 +3,64 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Flights</title>
-    <style>
-        td {
-            width: 200px;
-        }
-
-        th {
-            text-align: left;
-        }
-
-        table, th, td {
-            border-collapse: collapse;
-            border: 1px solid black;
-        }
-    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous"/>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/admin/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/flight/create">Add Flight</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/flight/findall">Browse Flights</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/user/create">Add User</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/user/findall">Browse Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
+</ul>
 
 <h1>All Flights</h1>
 
-<p th:text="'Flights FROM: ' + ${routes[0].departureAirport.location} + ' TO: ' + ${routes[0].arrivalAirport.location}"></p>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Dep. Airport</th>
+        <th>Dep. Date</th>
+        <th>Dep. Time</th>
+        <th>Arr. Airport</th>
+        <th>Arr. Date</th>
+        <th>Arr. Time</th>
+        <th>Price</th>
+    </tr>
 
-<th:block th:each="r : ${routes}">
-    <p th:text="'Number of flights: ' + ${#lists.size(r.flights)}"></p>
-    <p th:text="'Total Price: ' + ${r.totalPrice} + '$'"></p>
-    <table>
-        <thead>
+    <th:block th:each="f : ${flights}">
         <tr>
-            <th>#</th>
-            <th>Dep. Airport</th>
-            <th>Dep. Date</th>
-            <th>Dep. Time</th>
-            <th>Arr. Airport</th>
-            <th>Arr. Date</th>
-            <th>Arr. Time</th>
-            <th>Price</th>
+            <td style="color:#0000ff" th:text="${f.departureLocation.location} + '(' + ${f.departureLocation.name} +')'"></td>
+            <td th:text="${f.departureDate}"></td>
+            <td th:text="${f.departureTime}"></td>
+            <td style="color:#0000ff" th:text="${f.arrivalLocation.location} + '(' + ${f.arrivalLocation.name} + ')'"></td>
+            <td th:text="${f.arrivalDate}"></td>
+            <td th:text="${f.arrivalTime}"></td>
+            <td style="color:#228B22; font-weight:bold" th:text="${#numbers.formatDecimal(f.price, 0, 2)}"></td>
         </tr>
+    </th:block>
 
-        <th:block th:each="f, i : ${r.flights}">
-            <tr>
-                <td th:text="${i.index + 1}"></td>
-                <td style="color:#0000ff" th:text="${f.departureLocation.location} + '(' + ${f.departureLocation.name} +')'"></td>
-                <td th:text="${f.departureDate}"></td>
-                <td th:text="${f.departureTime}"></td>
-                <td style="color:#0000ff" th:text="${f.arrivalLocation.location} + '(' + ${f.arrivalLocation.name} + ')'"></td>
-                <td th:text="${f.arrivalDate}"></td>
-                <td th:text="${f.arrivalTime}"></td>
-                <td style="color:#228B22; font-weight:bold" th:text="${f.price}"></td>
-            </tr>
-        </th:block>
+    </thead>
+    <tbody>
 
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-
-    <br />
-    <form action="/flight/buy">
-        <input type="submit" value="Book flight"/>
-    </form>
-    <hr />
-</th:block>
+    </tbody>
+</table>
 
 
 </html>

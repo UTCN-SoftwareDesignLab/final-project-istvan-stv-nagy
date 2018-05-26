@@ -7,19 +7,16 @@ import java.util.stream.Collectors;
 
 public class PriceFilter implements Filter {
 
-    private double minPrice;
-
     private double maxPrice;
 
-    public PriceFilter(double minPrice, double maxPrice) {
-        this.minPrice = minPrice;
+    public PriceFilter(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 
     @Override
     public List<Route> applyFilter(List<Route> routes) {
         return routes.stream()
-                .filter(p -> p.getTotalPrice() >= minPrice && p.getTotalPrice() <= maxPrice)
+                .filter(p -> p.getTotalPrice() <= maxPrice)
                 .collect(Collectors.toList());
     }
 }

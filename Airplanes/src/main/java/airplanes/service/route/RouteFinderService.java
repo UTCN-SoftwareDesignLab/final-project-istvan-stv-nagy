@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface RouteFinderService {
 
-    List<Route> findRoute(Airport departureAirport, Airport arrivalAirport);
+    List<Route> findRoute(Airport departureAirport, Airport arrivalAirport, RouteCriteria criteria);
 
 }

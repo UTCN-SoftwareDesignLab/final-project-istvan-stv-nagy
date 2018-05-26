@@ -18,7 +18,7 @@ public class RouteFinder {
         this.flightRepository = flightRepository;
     }
 
-    public List<Route> findRoute(Airport departureAirport, Airport arrivalAirport) {
+    public List<Route> findRoute(Airport departureAirport, Airport arrivalAirport, RouteCriteria criteria) {
         List<Route> routes = new ArrayList<>();
 
         PriorityQueue<State> states = new PriorityQueue<>(new StateComparator());
@@ -44,7 +44,7 @@ public class RouteFinder {
                 for (Flight flight : possibleFlights) {
                     String arrivalLocation = flight.getArrivalLocation().getLocation();
                     if (validDestination(currentState, arrivalLocation)) {
-                        states.add(buildState(currentState, flight));
+                        states.add(buildState(currentState, flight, criteria));
                     }
                 }
             }
@@ -72,9 +72,16 @@ public class RouteFinder {
     }
 
 
-    private State buildState(State currentState, Flight flight) {
+    private State buildState(State currentState, Flight flight, RouteCriteria criteria) {
         Airport airport = flight.getArrivalLocation();
-        int cost = currentState.getCost() + 1;
+        int cost = currentState.getCost();
+        switch (criteria) {
+            case PRICE:
+                cost += flight.getPrice();
+            case TRANSFER:
+                cost++;
+                break;
+        }
         return new State(airport, cost, currentState, flight);
     }
 

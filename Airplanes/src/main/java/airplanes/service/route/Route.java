@@ -32,7 +32,7 @@ public class Route {
     }
 
     public void add(Flight flight) {
-        flights.add(0, flight);
+        flights.add(flight);
     }
 
     public Airport getDepartureAirport() {

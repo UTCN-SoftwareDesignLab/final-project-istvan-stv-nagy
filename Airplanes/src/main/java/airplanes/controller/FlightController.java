@@ -1,13 +1,11 @@
 package airplanes.controller;
 
-import airplanes.dto.FlightCreateDTO;
 import airplanes.dto.FlightSearchDTO;
 import airplanes.dto.RouteDTO;
 import airplanes.entity.Airport;
-import airplanes.entity.Bookmark;
 import airplanes.entity.FlightPrice;
-import airplanes.entity.flight.Flight;
 import airplanes.entity.User;
+import airplanes.entity.flight.Flight;
 import airplanes.service.airplane.AirplaneService;
 import airplanes.service.airport.AirportService;
 import airplanes.service.bookmark.BookmarkService;
@@ -16,6 +14,7 @@ import airplanes.service.flight.FlightService;
 import airplanes.service.pilot.PilotService;
 import airplanes.service.reservation.ReservationService;
 import airplanes.service.route.Route;
+import airplanes.service.route.RouteCriteria;
 import airplanes.service.route.RouteFinderService;
 import airplanes.service.route.filters.Filter;
 import airplanes.service.route.filters.PriceFilter;
@@ -26,8 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.sql.Date;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,63 +36,19 @@ public class FlightController {
 
     private AirportService airportService;
 
-    private AirplaneService airplaneService;
-
-    private PilotService pilotService;
-
     private RouteFinderService routeFinderService;
 
     private ReservationService reservationService;
 
     private FlightPriceService flightPriceService;
 
-    private BookmarkService bookmarkService;
-
     @Autowired
-    public FlightController(FlightService flightService, AirportService airportService, AirplaneService airplaneService, PilotService pilotService, RouteFinderService routeFinderService, ReservationService reservationService, FlightPriceService flightPriceService, BookmarkService bookmarkService) {
+    public FlightController(FlightService flightService, AirportService airportService, RouteFinderService routeFinderService, ReservationService reservationService, FlightPriceService flightPriceService) {
         this.flightService = flightService;
         this.airportService = airportService;
-        this.airplaneService = airplaneService;
-        this.pilotService = pilotService;
         this.routeFinderService = routeFinderService;
         this.reservationService = reservationService;
         this.flightPriceService = flightPriceService;
-        this.bookmarkService = bookmarkService;
-    }
-
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String createFlight(Model model) {
-        model.addAttribute("airports", airportService.findAll());
-        model.addAttribute("airplanes", airplaneService.findAll());
-        model.addAttribute("pilots", pilotService.findAll());
-        model.addAttribute("flight", new FlightCreateDTO());
-        return "flight-form";
-    }
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String createFlight(@ModelAttribute(value = "flight") FlightCreateDTO flightCreateDTO) {
-        Integer departureAirportID = flightCreateDTO.getDepartureAirportID();
-        Date departureDate = Date.valueOf(flightCreateDTO.getDepartureDate());
-        LocalTime departureTime = LocalTime.parse(flightCreateDTO.getDepartureTime());
-
-        Integer arrivalAirportID = flightCreateDTO.getArrivalAirportID();
-        Date arrivalDate = Date.valueOf(flightCreateDTO.getArrivalDate());
-        LocalTime arrivalTime = LocalTime.parse(flightCreateDTO.getArrivalTime());
-
-        double price = flightCreateDTO.getPrice();
-
-        Integer airplaneID = flightCreateDTO.getAirplaneID();
-
-        Integer pilotID = flightCreateDTO.getPilotID();
-
-        flightService.create(departureAirportID, arrivalAirportID, departureDate, arrivalDate, departureTime, arrivalTime, price, airplaneID, pilotID);
-        return "redirect:/flight/findall";
-    }
-
-    @RequestMapping(value = "/findall", method = RequestMethod.GET)
-    public String findAllFlights(Model model) {
-        model.addAttribute("flights", flightService.findAll());
-        return "flights-list";
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -107,16 +60,24 @@ public class FlightController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String route(Model model, @ModelAttribute(value="flight") FlightSearchDTO flightSearchDTO,
-                             @RequestParam(value = "priceCheckbox", required = false) String priceFiltering,
-                             @RequestParam(value = "transferCheckbox", required = false) String transferFiltering,
+                             @RequestParam(value = "gridCheck1", required = false) String priceFiltering,
+                             @RequestParam(value = "gridCheck2", required = false) String transferFiltering,
+                             @RequestParam(value = "criteriaID", required = false) String orderingCriteria,
                              HttpSession session) {
         Airport departureAirport = airportService.findById(flightSearchDTO.getDepartureAirportID());
         Airport arrivalAirport = airportService.findById(flightSearchDTO.getArrivalAirportID());
 
-        List<Route> routes = routeFinderService.findRoute(departureAirport, arrivalAirport);
+        RouteCriteria routeCriteria = RouteCriteria.TRANSFER;
+        if (orderingCriteria == null)
+            routeCriteria = RouteCriteria.TRANSFER;
+        else if (orderingCriteria.equals("price"))
+            routeCriteria = RouteCriteria.PRICE;
+        else if (orderingCriteria.equals("transfer"))
+            routeCriteria = RouteCriteria.TRANSFER;
+        List<Route> routes = routeFinderService.findRoute(departureAirport, arrivalAirport, routeCriteria);
 
         List<Filter> filters = new ArrayList<>();
-        if (priceFiltering != null) filters.add(new PriceFilter(flightSearchDTO.getMinPrice(), flightSearchDTO.getMaxPrice()));
+        if (priceFiltering != null) filters.add(new PriceFilter(flightSearchDTO.getMaxPrice()));
         if (transferFiltering != null) filters.add(new TransferFilter(flightSearchDTO.getMaxTransfers()));
 
         for (Filter filter : filters) {
@@ -143,7 +104,8 @@ public class FlightController {
                 routeDTO.add(flightPrice);
             }
             routeDTO.setTotalPrice(totalPrice);
-            routeDTOs.add(routeDTO);
+            if (priceFiltering == null || routeCriteria != RouteCriteria.PRICE || totalPrice <= flightSearchDTO.getMaxPrice())
+                routeDTOs.add(routeDTO);
         }
 
         model.addAttribute("routes", routeDTOs);
@@ -157,7 +119,8 @@ public class FlightController {
     public String buyTicket(@PathVariable(value = "flightID") Integer flightID, HttpSession session) {
         Flight flight = flightService.findById(flightID);
         User user = (User)session.getAttribute("active-user");
-        reservationService.create(flight, user);
+        FlightPrice flightPrice = flightPriceService.findByUserAndFlight(user, flight);
+        reservationService.create(flight, user, flightPrice.getPrice());
         return "redirect:/user/flights";
     }
 }

@@ -1,6 +1,6 @@
 package airplanes.service.user;
 
-import airplanes.dto.UserDto;
+import airplanes.dto.UserDTO;
 import airplanes.entity.User;
 import airplanes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserDto userDto) {
-        String password = new ShaPasswordEncoder().encodePassword(userDto.password, "SHA-1");
-        User user = new User(userDto.username, password, userDto.role);
+    public User create(UserDTO userDto) {
+        String password = new ShaPasswordEncoder().encodePassword(userDto.getPassword(), "SHA-1");
+        User user = new User(userDto.getUsername(), password, userDto.getRole(), userDto.getFirstName(), userDto.getLastName());
         return userRepository.save(user);
     }
 
@@ -44,15 +44,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         return userRepository.findOne(id);
-    }
-
-    @Override
-    public User update(Integer id, UserDto userDto) {
-        User user = userRepository.findOne(id);
-        user.setId(id);
-        user.setUsername(userDto.username);
-        user.setPassword(userDto.password);
-        user.setRole(userDto.role);
-        return userRepository.save(user);
     }
 }

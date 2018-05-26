@@ -21,8 +21,11 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public void create(User user, FlightPrice flight) {
-        Bookmark bookmark = new Bookmark(user, flight);
-        bookmarkRepository.save(bookmark);
+        Bookmark bookmark = bookmarkRepository.findByUserAndFlight(user, flight);
+        if (bookmark == null) {
+            bookmark = new Bookmark(user, flight);
+            bookmarkRepository.save(bookmark);
+        }
     }
 
     @Override

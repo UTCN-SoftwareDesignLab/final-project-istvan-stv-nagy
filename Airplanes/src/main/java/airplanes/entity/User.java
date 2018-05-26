@@ -19,10 +19,12 @@ public class User {
 
     public User() {}
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, String role, String firstName, String lastName) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public int getId() {

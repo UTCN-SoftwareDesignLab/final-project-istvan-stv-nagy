@@ -1,17 +1,14 @@
-function showFilters(checkbox, text) {
+function showFilters(checkbox, text1, text2) {
     var checkBox = document.getElementById(checkbox);
 
-    var filter = document.getElementById(text)
+    var filter1 = document.getElementById(text1);
+    var filter2 = document.getElementById(text2);
 
     if (checkBox.checked == true) {
-        filter.style.display = "block";
+        filter1.style.display = "block";
+        filter2.style.display = "block";
     } else {
-        filter.style.display = "none";
+        filter1.style.display = "none";
+        filter2.style.display = "none";
     }
-}
-
-function bookFlight() {
-    $.post('/flight/book', {
-        data: JSON.stringify(route),
-    });
 }

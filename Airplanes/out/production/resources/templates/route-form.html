@@ -31,89 +31,189 @@
     </li>
 </ul>
 
-<h1>Search for flights</h1>
+<br/><br/>
 
-<form class="form-horizontal" th:action="@{/flight/search}" th:object="${flight}" method="post">
-    <hr/>
-    <b>Select departure and arrival airports:</b>
-    <br/>
-    FROM:
-    <select name="depAirport" id="depAirport" th:field="${flight.departureAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
-    </select>
-    TO:
-    <select name="arrAirport" id="arrAirport" th:field="${flight.arrivalAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
-    </select>
-    <hr />
+<div class="container">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1>Search for flights</h1>
+            </div>
+            <div class="panel-body">
+                <form th:action="@{/flight/search}" th:object="${flight}" method="post">
+                    <hr/>
+                    <div class="form-group row">
+                        <label style="color:#0000ff; font-size:16px" class="col-sm-5 col-form-label">Departure and Arrival Airports:</label>
+                    </div>
 
-    <input type="checkbox" name="priceCheckbox" id="priceCheckbox" value="filter" onclick="showFilters('priceCheckbox', 'priceFilterText')"/><b>Price:</b>
-    <br/>
-    <p id="priceFilterText" style="display:none">
-        FROM: <input type="number"  step="0.01" id="priceMin" name="price" th:field="${flight.minPrice}"/>
-        TO: <input type="number" step="0.01" id="priceMax" name="price" th:field="${flight.maxPrice}"/>
-    </p>
-    <hr/>
+                    <div class="form-group row">
+                        <label for="depAirportID" class="col-sm-2 col-form-label">From</label>
+                        <div class="col-sm-3">
+                            <select name="depAirport" id="depAirportID" class="form-control" th:field="${flight.departureAirportID}">
+                                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select departure airport</option>
+                                <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+                            </select>
+                        </div>
+                    </div>
 
-    <input type="checkbox" name="transferCheckbox" id="transferCheckbox" value="selected" onclick="showFilters('transferCheckbox', 'transferFilterText')"/><b>Number of transfers:</b>
-    <br/>
-    <p id="transferFilterText" style="display:none">
-        Transfers: <input type="number" step="1" id="transfer" name="price" th:field="${flight.maxTransfers}"/>
-    </p>
+                    <div class="form-group row">
+                        <label for="arrAirportID" class="col-sm-2 col-form-label">To</label>
+                        <div class="col-sm-3">
+                            <select name="arrAirport" id="arrAirportID" class="form-control" th:field="${flight.arrivalAirportID}">
+                                <option value="0" hidden="hidden" disabled="disabled" selected="selected">Select arrival airport</option>
+                                <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+                            </select>
+                        </div>
+                    </div>
 
-    <hr/>
-    <button class="btn btn-success">Search</button>
-</form>
+                    <hr/>
+                    <div class="form-group row">
+                        <label style="color:#0000ff; font-size:16px" class="col-sm-5 col-form-label">Price Filter:</label>
+                    </div>
 
-<th:block th:each="r, ri : ${routes}">
-    <p th:text="'Number of flights: ' + ${#lists.size(r.flights)}"></p>
-    <p th:text="'Total Price: ' + ${#numbers.formatDecimal(r.totalPrice, 0, 2)} + '$'"></p>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Dep. Airport</th>
-            <th>Dep. Date</th>
-            <th>Dep. Time</th>
-            <th>Arr. Airport</th>
-            <th>Arr. Date</th>
-            <th>Arr. Time</th>
-            <th>Price</th>
-            <th>Book Flight</th>
-            <th>Add to bookmarks</th>
-        </tr>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Filter</label>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input"  type="checkbox" name="gridCheck1" id="gridCheck1" value="selected" onclick="showFilters('gridCheck1', 'priceMaxID', 'maxPriceLabel')"/>
+                                <label class="form-check-label" for="gridCheck1">
+                                    Price
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-        <th:block th:each="f, i : ${r.flights}">
-            <tr>
-                <td th:text="${i.index + 1}"></td>
-                <td style="color:#0000ff" th:text="${f.flight.departureLocation.location} + '(' + ${f.flight.departureLocation.name} +')'"></td>
-                <td th:text="${f.flight.departureDate}"></td>
-                <td th:text="${f.flight.departureTime}"></td>
-                <td style="color:#0000ff" th:text="${f.flight.arrivalLocation.location} + '(' + ${f.flight.arrivalLocation.name} + ')'"></td>
-                <td th:text="${f.flight.arrivalDate}"></td>
-                <td th:text="${f.flight.arrivalTime}"></td>
-                <td style="color:#228B22; font-weight:bold" th:text="${#numbers.formatDecimal(f.price, 0, 2)}"></td>
-                <td>
-                    <form th:action="@{'/flight/book/' + ${f.id}}" method="post">
-                        <button class="btn btn-primary">Book flight</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{'/user/bookmark/' + ${f.flight.id}}" method="post">
-                        <button class="btn btn-warning">Bookmark</button>
-                    </form>
-                </td>
-            </tr>
+                    <div class="form-group row">
+                        <label for="priceMaxID" style="display:none" id="maxPriceLabel" class="col-sm-2 col-form-label">Max. Price</label>
+                        <div class="col-sm-2">
+                            <input type="number" style="display:none" class="form-control" step="0.01" id="priceMaxID" name="price" th:field="${flight.maxPrice}"/>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div class="form-group row">
+                        <label style="color:#0000ff; font-size:16px" class="col-sm-5 col-form-label">Transfer Filter:</label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Filter</label>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck2" name="gridCheck2" value="selected" onclick="showFilters('gridCheck2', 'transferMaxID', 'maxTransfersLabel')"/>
+                                <label class="form-check-label" for="gridCheck2">
+                                    Transfers
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="transferMaxID" style="display:none" id="maxTransfersLabel" class="col-sm-2 col-form-label">Max. Transfers</label>
+                        <div class="col-sm-2">
+                            <input type="number" style="display:none" class="form-control" step="1" id="transferMaxID" name="price" th:field="${flight.maxTransfers}"/>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div class="form-group row">
+                        <label style="color:#0000ff; font-size:16px" class="col-sm-5 col-form-label">Ordering Criteria:</label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Filter</label>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck3" name="gridCheck3" value="selected" onclick="showFilters('gridCheck3', 'criteriaID', 'criteriaLabel')"/>
+                                <label class="form-check-label" for="gridCheck3">
+                                    Criteria
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="transferMaxID" style="display:none" id="criteriaLabel" class="col-sm-2 col-form-label">Order By:</label>
+                        <div class="col-sm-2">
+                            <select style="display:none" name="criteriaID" id="criteriaID" class="form-control">
+                                <option value="price">Price</option>
+                                <option value="transfer">Transfers</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="panel-group">
+        <th:block th:each="r, ri : ${routes}">
+            <br/>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span style="font-weight:bold; font-size:22px" th:text="${ri.index + 1} + '.'"></span>
+                    <span class="glyphicon glyphicon-plane"></span>
+                    <p style="font-weight:bold; font-size:18px" th:text="'Number of flights: ' + ${#lists.size(r.flights)}"></p>
+                    <p style="font-weight:bold; font-size:18px" th:text="'Total Price: ' + ${#numbers.formatDecimal(r.totalPrice, 0, 2)} + '$'"></p>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Dep. Airport</th>
+                            <th>Dep. Date</th>
+                            <th>Dep. Time</th>
+                            <th>Arr. Airport</th>
+                            <th>Arr. Date</th>
+                            <th>Arr. Time</th>
+                            <th>Price</th>
+                            <th>Book Flight</th>
+                            <th>Add to bookmarks</th>
+                        </tr>
+
+                        <th:block th:each="f, i : ${r.flights}">
+                            <tr>
+                                <td th:text="${i.index + 1}"></td>
+                                <td style="color:#0000ff; font-weight:bold;" th:text="${f.flight.departureLocation.location} + '(' + ${f.flight.departureLocation.name} +')'"></td>
+                                <td th:text="${f.flight.departureDate}"></td>
+                                <td th:text="${f.flight.departureTime}"></td>
+                                <td style="color:#0000ff; font-weight:bold;" th:text="${f.flight.arrivalLocation.location} + '(' + ${f.flight.arrivalLocation.name} + ')'"></td>
+                                <td th:text="${f.flight.arrivalDate}"></td>
+                                <td th:text="${f.flight.arrivalTime}"></td>
+                                <td style="color:#228B22; font-weight:bold" th:text="${#numbers.formatDecimal(f.price, 0, 2)}"></td>
+                                <td>
+                                    <form th:action="@{'/flight/book/' + ${f.flight.id}}" method="post">
+                                        <button class="btn btn-primary">Book flight</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form th:action="@{'/user/bookmark/' + ${f.flight.id}}" method="post">
+                                        <button class="btn btn-warning">Bookmark</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br />
         </th:block>
-
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-
-    <br />
-</th:block>
+    </div>
+</div>
 
 </body>
 </html>

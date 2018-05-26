@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReservationService {
 
-    Reservation create(Flight flight, User user);
+    Reservation create(Flight flight, User user, double price);
 
     List<Reservation> findAllByUser(User user);
 

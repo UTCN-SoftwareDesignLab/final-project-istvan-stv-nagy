@@ -1,6 +1,7 @@
 package airplanes.service.flight;
 
 import airplanes.entity.Airport;
+import airplanes.entity.Pilot;
 import airplanes.entity.flight.Flight;
 
 import java.sql.Date;
@@ -16,4 +17,6 @@ public interface FlightService {
     List<Flight> findAllFrom(Airport airport);
 
     Flight findById(Integer id);
+
+    List<Flight> findAllByPilot(Pilot pilot);
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"/>
+<script src="/js/route-form.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Search Flight</title>
+</head>
+<body>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/pilot/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/pilot/flights">My flights</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/pilot/airplanes">Airplanes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
+</ul>
+
+<h1>My Flights</h1>
+
+<br/><br/>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Departure Airport</th>
+        <th>Departure Date</th>
+        <th>Departure Time</th>
+        <th>Arrival Airport</th>
+        <th>Arrival Date</th>
+        <th>Arrival Time</th>
+        <th>Airplane ID</th>
+        <th>Airplane Type</th>
+        <th>Airplane Capacity</th>
+    </tr>
+
+    <th:block th:each="f : ${flights}">
+        <tr>
+            <td th:text="${f.departureLocation.location}"></td>
+            <td th:text="${f.departureDate}"></td>
+            <td th:text="${f.departureTime}"></td>
+            <td th:text="${f.arrivalLocation.location}"></td>
+            <td th:text="${f.arrivalDate}"></td>
+            <td th:text="${f.arrivalTime}"></td>
+            <td th:text="${f.airplane.number}"></td>
+            <td th:text="${f.airplane.type}"></td>
+            <td th:text="${f.airplane.capacity}"></td>
+        </tr>
+    </th:block>
+
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+</body>
+</html>
