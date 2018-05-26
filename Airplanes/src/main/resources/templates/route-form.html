@@ -2,29 +2,118 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+            crossorigin="anonymous"/>
+      <script src="/js/route-form.js"></script>
+      <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <head>
     <meta charset="UTF-8"/>
     <title>Search Flight</title>
 </head>
 <body>
 
-<form th:action="@{/flight/search}" th:object="${flight}" method="post">
-    Departure Airport:
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/user/profile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/flight/search">Search</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/user/flights">My flights</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/user/bookmarks">Bookmarks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
+</ul>
+
+<h1>Search for flights</h1>
+
+<form class="form-horizontal" th:action="@{/flight/search}" th:object="${flight}" method="post">
+    <hr/>
+    <b>Select departure and arrival airports:</b>
+    <br/>
+    FROM:
     <select name="depAirport" id="depAirport" th:field="${flight.departureAirportID}">
         <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
     </select>
-
-    <hr />
-
-    Arrival Airport:
+    TO:
     <select name="arrAirport" id="arrAirport" th:field="${flight.arrivalAirportID}">
         <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
     </select>
-
     <hr />
 
-    <button>Create</button>
+    <input type="checkbox" name="priceCheckbox" id="priceCheckbox" value="filter" onclick="showFilters('priceCheckbox', 'priceFilterText')"/><b>Price:</b>
+    <br/>
+    <p id="priceFilterText" style="display:none">
+        FROM: <input type="number"  step="0.01" id="priceMin" name="price" th:field="${flight.minPrice}"/>
+        TO: <input type="number" step="0.01" id="priceMax" name="price" th:field="${flight.maxPrice}"/>
+    </p>
+    <hr/>
+
+    <input type="checkbox" name="transferCheckbox" id="transferCheckbox" value="selected" onclick="showFilters('transferCheckbox', 'transferFilterText')"/><b>Number of transfers:</b>
+    <br/>
+    <p id="transferFilterText" style="display:none">
+        Transfers: <input type="number" step="1" id="transfer" name="price" th:field="${flight.maxTransfers}"/>
+    </p>
+
+    <hr/>
+    <button class="btn btn-success">Search</button>
 </form>
+
+<th:block th:each="r, ri : ${routes}">
+    <p th:text="'Number of flights: ' + ${#lists.size(r.flights)}"></p>
+    <p th:text="'Total Price: ' + ${#numbers.formatDecimal(r.totalPrice, 0, 2)} + '$'"></p>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Dep. Airport</th>
+            <th>Dep. Date</th>
+            <th>Dep. Time</th>
+            <th>Arr. Airport</th>
+            <th>Arr. Date</th>
+            <th>Arr. Time</th>
+            <th>Price</th>
+            <th>Book Flight</th>
+            <th>Add to bookmarks</th>
+        </tr>
+
+        <th:block th:each="f, i : ${r.flights}">
+            <tr>
+                <td th:text="${i.index + 1}"></td>
+                <td style="color:#0000ff" th:text="${f.flight.departureLocation.location} + '(' + ${f.flight.departureLocation.name} +')'"></td>
+                <td th:text="${f.flight.departureDate}"></td>
+                <td th:text="${f.flight.departureTime}"></td>
+                <td style="color:#0000ff" th:text="${f.flight.arrivalLocation.location} + '(' + ${f.flight.arrivalLocation.name} + ')'"></td>
+                <td th:text="${f.flight.arrivalDate}"></td>
+                <td th:text="${f.flight.arrivalTime}"></td>
+                <td style="color:#228B22; font-weight:bold" th:text="${#numbers.formatDecimal(f.price, 0, 2)}"></td>
+                <td>
+                    <form th:action="@{'/flight/book/' + ${f.id}}" method="post">
+                        <button class="btn btn-primary">Book flight</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{'/user/bookmark/' + ${f.flight.id}}" method="post">
+                        <button class="btn btn-warning">Bookmark</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <br />
+</th:block>
 
 </body>
 </html>

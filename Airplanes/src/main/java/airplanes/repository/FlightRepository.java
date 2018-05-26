@@ -1,7 +1,7 @@
 package airplanes.repository;
 
 import airplanes.entity.Airport;
-import airplanes.entity.Flight;
+import airplanes.entity.flight.Flight;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

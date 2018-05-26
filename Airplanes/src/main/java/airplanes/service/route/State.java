@@ -1,7 +1,7 @@
 package airplanes.service.route;
 
 import airplanes.entity.Airport;
-import airplanes.entity.Flight;
+import airplanes.entity.flight.Flight;
 
 public class State {
 

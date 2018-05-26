@@ -1,7 +1,7 @@
 package airplanes.service.route;
 
 import airplanes.entity.Airport;
-import airplanes.entity.Flight;
+import airplanes.entity.flight.Flight;
 import airplanes.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,10 +56,18 @@ public class RouteFinder {
 
     private Route computeRoute(State currentState, Airport departureAirport, Airport arrivalAirport) {
         Route route = new Route(departureAirport, arrivalAirport);
+
         while (currentState.getFlight() != null) {
             route.add(currentState.getFlight());
             currentState = currentState.getParent();
         }
+
+        double totalPrice = 0;
+        for (Flight flight : route.getFlights()) {
+            totalPrice += flight.getPrice();
+        }
+        route.setTotalPrice(totalPrice);
+
         return route;
     }
 

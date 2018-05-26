@@ -8,29 +8,60 @@
 </head>
 <body>
 
-<form th:action="@{/flight/create}" th:object="${flight}" method="post">
+<form class="form-horizontal" th:action="@{/flight/create}" th:object="${flight}" method="post">
+    <b>Departure Information:</b>
+    <hr />
     Departure Airport:
     <select name="depAirport" id="depAirport" th:field="${flight.departureAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
     </select>
-
+    <br />
     Departure Date:
     <input type="date" id="depDate" name="depDate" th:field="${flight.departureDate}"/>
+    <br />
 
     Departure Time:
     <input type="time" id="depTime" name="depTime" th:field="${flight.departureTime}"/>
+    <hr />
+    <br /> <br />
 
+    <b>Arrival Information:</b>
+    <hr />
     Arrival Airport:
     <select name="arrAirport" id="arrAirport" th:field="${flight.arrivalAirportID}">
-        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location}"></option>
+        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.location} + '(' +${airport.name} +')'"></option>
     </select>
+    <br />
 
     Departure Date:
     <input type="date" id="arrDate" name="depDate" th:field="${flight.arrivalDate}"/>
+    <br />
 
     Departure Time:
     <input type="time" id="arrTime" name="depTime" th:field="${flight.arrivalTime}"/>
+    <hr />
+    <br /> <br />
 
+    <b>Pilot and Airplane:</b>
+    <hr />
+    Airplane:
+    <select name="airplane" id="airplane" th:field="${flight.airplaneID}">
+        <option th:each="airplane : ${airplanes}" th:value="${airplane.id}" th:text="${airplane.number} + '(' +${airplane.type} +')'"></option>
+    </select>
+    <br />
+    Pilot:
+    <select name="pilot" id="pilot" th:field="${flight.pilotID}">
+        <option th:each="pilot : ${pilots}" th:value="${pilot.id}" th:text="${pilot.name}"></option>
+    </select>
+    <hr />
+    <br/><br/>
+
+    <b>Price Information:</b>
+    <hr />
+    Price:
+    <input type="number" step="0.01" id="price" name="price" th:field="${flight.price}"/>
+    <hr />
+    <br/><br/>
 
     <button>Create</button>
 </form>

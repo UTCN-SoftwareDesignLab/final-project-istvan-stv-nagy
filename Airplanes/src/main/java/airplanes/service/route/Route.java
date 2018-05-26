@@ -1,16 +1,21 @@
 package airplanes.service.route;
 
 import airplanes.entity.Airport;
-import airplanes.entity.Flight;
+import airplanes.entity.flight.Flight;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Route {
 
+    private List<Flight> flights;
+
     private Airport departureAirport;
     private Airport arrivalAirport;
-    private List<Flight> flights;
+
+    private double totalPrice;
+
+    public Route() {}
 
     public Route(Airport departureAirport, Airport arrivalAirport) {
         this.departureAirport = departureAirport;
@@ -44,5 +49,13 @@ public class Route {
 
     public void setArrivalAirport(Airport arrivalAirport) {
         this.arrivalAirport = arrivalAirport;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
