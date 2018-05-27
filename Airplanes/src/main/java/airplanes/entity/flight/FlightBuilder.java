@@ -60,6 +60,11 @@ public class FlightBuilder {
         return this;
     }
 
+    public FlightBuilder setPlacesLeft(int places) {
+        flight.setPlacesLeft(places);
+        return this;
+    }
+
     public Flight build() {
         return flight;
     }

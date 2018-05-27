@@ -38,6 +38,8 @@ public class Flight {
 
     private double price;
 
+    private int placesLeft;
+
     public int getId() {
         return id;
     }
@@ -112,6 +114,14 @@ public class Flight {
 
     public Pilot getPilot() {
         return pilot;
+    }
+
+    public int getPlacesLeft() {
+        return placesLeft;
+    }
+
+    public void setPlacesLeft(int placesLeft) {
+        this.placesLeft = placesLeft;
     }
 
     public void setPilot(Pilot pilot) {

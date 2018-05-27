@@ -63,12 +63,13 @@ public class FlightController {
                              @RequestParam(value = "gridCheck1", required = false) String priceFiltering,
                              @RequestParam(value = "gridCheck2", required = false) String transferFiltering,
                              @RequestParam(value = "criteriaID", required = false) String orderingCriteria,
+                             @RequestParam(value = "gridCheck3", required = false) String criteriaCheck,
                              HttpSession session) {
         Airport departureAirport = airportService.findById(flightSearchDTO.getDepartureAirportID());
         Airport arrivalAirport = airportService.findById(flightSearchDTO.getArrivalAirportID());
 
         RouteCriteria routeCriteria = RouteCriteria.TRANSFER;
-        if (orderingCriteria == null)
+        if (criteriaCheck == null)
             routeCriteria = RouteCriteria.TRANSFER;
         else if (orderingCriteria.equals("price"))
             routeCriteria = RouteCriteria.PRICE;
@@ -104,8 +105,14 @@ public class FlightController {
                 routeDTO.add(flightPrice);
             }
             routeDTO.setTotalPrice(totalPrice);
-            if (priceFiltering == null || routeCriteria != RouteCriteria.PRICE || totalPrice <= flightSearchDTO.getMaxPrice())
+            if (priceFiltering == null ||  totalPrice <= flightSearchDTO.getMaxPrice())
                 routeDTOs.add(routeDTO);
+        }
+
+        session.setAttribute("routes-size", routeDTOs.size());
+        for (int i = 0; i < routeDTOs.size(); i++) {
+            RouteDTO route = routeDTOs.get(i);
+            session.setAttribute("route" + i, route);
         }
 
         model.addAttribute("routes", routeDTOs);
@@ -113,6 +120,23 @@ public class FlightController {
         model.addAttribute("flight", flightSearchDTO);
 
         return "route-form";
+    }
+
+    @RequestMapping(value = "/book-route/{routeID}", method = RequestMethod.POST)
+    public String bookRoute(@PathVariable(value = "routeID") Integer routeID, HttpSession session) {
+        RouteDTO selectedRoute = (RouteDTO)session.getAttribute("route" + routeID);
+        int routesSize = (Integer)session.getAttribute("routes-size");
+        for (int i = 0; i < routesSize; i++) {
+            session.removeAttribute("route" + i);
+        }
+        session.removeAttribute("routes-size");
+
+        User user = (User)session.getAttribute("active-user");
+
+        for (FlightPrice f : selectedRoute.getFlights()) {
+            reservationService.create(f.getFlight(), user, f.getPrice());
+        }
+        return "redirect:/user/flights";
     }
 
     @RequestMapping(value = "/book/{flightID}", method = RequestMethod.POST)

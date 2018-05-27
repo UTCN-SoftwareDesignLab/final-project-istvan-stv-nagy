@@ -37,7 +37,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h1>Search for flights</h1>
+                <p style="text-align: center; color:#000080; font-weight:bold; font-size:38px; ">Search for flights</p>
             </div>
             <div class="panel-body">
                 <form th:action="@{/flight/search}" th:object="${flight}" method="post">
@@ -175,10 +175,13 @@
                             <th>Arr. Date</th>
                             <th>Arr. Time</th>
                             <th>Price</th>
+                            <th>Places Left</th>
                             <th>Book Flight</th>
                             <th>Add to bookmarks</th>
                         </tr>
+                        </thead>
 
+                        <tbody>
                         <th:block th:each="f, i : ${r.flights}">
                             <tr>
                                 <td th:text="${i.index + 1}"></td>
@@ -189,6 +192,7 @@
                                 <td th:text="${f.flight.arrivalDate}"></td>
                                 <td th:text="${f.flight.arrivalTime}"></td>
                                 <td style="color:#228B22; font-weight:bold" th:text="${#numbers.formatDecimal(f.price, 0, 2)}"></td>
+                                <td th:text="${f.flight.placesLeft}"></td>
                                 <td>
                                     <form th:action="@{'/flight/book/' + ${f.flight.id}}" method="post">
                                         <button class="btn btn-primary">Book flight</button>
@@ -196,17 +200,20 @@
                                 </td>
                                 <td>
                                     <form th:action="@{'/user/bookmark/' + ${f.flight.id}}" method="post">
-                                        <button class="btn btn-warning">Bookmark</button>
+                                        <button class="btn btn-primary">Bookmark</button>
                                     </form>
                                 </td>
                             </tr>
                         </th:block>
-
-                        </thead>
-                        <tbody>
-
                         </tbody>
                     </table>
+
+                    <div style="text-align: center;">
+                        <form th:action="@{'/flight/book-route/' + ${ri.index}}" method="post">
+                            <button style="width:200px" class="btn btn-danger">Book route</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
